@@ -7,3 +7,5 @@ See also Ron Shnapp work on Lagrangian plotting on BitBucket https://bitbucket.o
 
 and a quick preview [notebook](https://nbviewer.jupyter.org/urls/bitbucket.org/ronshnapp/lagrangian_plotting_library/raw/1253baf5593ab9604584d5219c2de5d14ebb59c3/Tutorials.ipynb)
 
+![](3dtraj.png)
+
