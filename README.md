@@ -1,5 +1,7 @@
 # Examples of data read/write, analysis and plotting with Flowtracks
 
+Flowtracks https://flowtracks.readthedocs.io/en/latest/
+
 See the notebooks on nbviewer https://nbviewer.jupyter.org/github/alexlib/flowtracks_examples/tree/master/ 
 
 ## Additional examples by Ron Shnapp
