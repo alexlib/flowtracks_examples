@@ -1,7 +1,7 @@
-# flowtracks_examples
+# Examples of data read/write, analysis and plotting with Flowtracks
 
-Click on the notebooks
+See the notebooks on nbviewer https://nbviewer.jupyter.org/github/alexlib/flowtracks_examples/tree/master/ 
 
-## additional options
-See also Ron Shnapp work on Lagrangian plotting on BitBucket
+## Additional examples by Ron Shnapp
+See also Ron Shnapp work on Lagrangian plotting on BitBucket https://bitbucket.org/ronshnapp/lagrangian_plotting_library/src/master/ 
 
