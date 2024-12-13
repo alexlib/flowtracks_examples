@@ -1,0 +1,6 @@
+tables
+git+https://github.com/openptv/postptv
+matplotlib
+scipy
+pandas
+plotly
