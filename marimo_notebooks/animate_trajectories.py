@@ -26,7 +26,7 @@ def _(Path, mo, np):
     from flowtracks.io import trajectories_table
     from flowtracks.scene import Scene
 
-    trajects_hdf = Path("./pyPTV_folder/trajectories.h5")
+    trajects_hdf = Path("./test_h5/test.h5")
     scene = Scene(trajects_hdf)
 
     min_t, max_t = scene.frame_range()
@@ -118,7 +118,7 @@ def _(
         ax.view_init(elev=10, azim=-90)
 
         cmap = plt.get_cmap("viridis")
-    
+
         # Use the selected range from the frame slider!
         start_frame, end_frame = frame_range_slider.value
         frames_range = range(start_frame, end_frame + 1, 2)  # Skip every other frame for speed

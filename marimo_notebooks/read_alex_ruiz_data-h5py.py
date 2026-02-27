@@ -72,11 +72,11 @@ def _(Trajectory, h5py, np, os):
             ref = f[data_name] # reference only
 
             trajects = []
-        
+
             # horizontal or vertical structure:
-        
+
             if np.argmax(ref['t'].shape) == 0:
-        
+
                 for i in range(ref['t'].shape[0]):
                     # also convert data from mm to m.
                     pos = np.vstack((f[ref['xf'][i][0]][()],f[ref['yf'][i][0]][()],f[ref['zf'][i][0]][()])).T
@@ -85,9 +85,9 @@ def _(Trajectory, h5py, np, os):
                     t = f[ref['t'][i][0]][()].squeeze()
                     trajid = f[ref['trajid'][i][0]][()][0][0]
                     trajects.append(Trajectory(pos, vel, t, trajid, accel=accel))
-        
+
             else:
-        
+
                 for i in range(ref['t'].shape[-1]):
                     # also convert data from mm to m.
                     pos = np.vstack((f[ref['xf'][0][i]][()],f[ref['yf'][0][i]][()],f[ref['zf'][0][i]][()])).T
@@ -96,7 +96,7 @@ def _(Trajectory, h5py, np, os):
                     t = f[ref['t'][0][i]][()].squeeze()
                     trajid = f[ref['trajid'][0][i]][()][0][0]
                     trajects.append(Trajectory(pos, vel, t, trajid, accel=accel))
-    
+
         return trajects
 
     return (trajectories_mat_h5py,)

@@ -13,7 +13,7 @@ def _():
 @app.cell
 def _():
     from flowtracks.io import trajectories_ptvis
-    inName = '/Volumes/ExtremePro/test_ed_lab/res/ptv_is.%d'
+    inName = 'test_data/ptv_is.%d'
     trajects = trajectories_ptvis(inName, traj_min_len=15)
     return (trajects,)
 
@@ -36,8 +36,8 @@ def _(trajects):
     tmp = []
     for tr in trajects:
         tmp.append(pd.DataFrame({'id':tr.trajid(),'x':tr.pos()[:,0],'y':tr.pos()[:,1],'z':tr.pos()[:,2]}))
-    
-    
+
+
     df = pd.concat(tmp)
     return (df,)
 

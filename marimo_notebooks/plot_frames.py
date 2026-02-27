@@ -16,9 +16,9 @@ def _():
 
 
 @app.cell
-def _(io, np):
+def _(io):
     # get frames where trajectories appeared 
-    frames_range = [np.int(tr.time()[-1]) for tr in io.iter_trajectories_ptvis('./test_data/ptv_is.%d')]
+    frames_range = [int(tr.time()[-1]) for tr in io.iter_trajectories_ptvis('./test_data/ptv_is.%d')]
     print(frames_range[0],frames_range[-1])
     return
 

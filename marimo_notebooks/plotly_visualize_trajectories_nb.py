@@ -26,7 +26,7 @@ def _(Path, mo, np):
     from flowtracks.io import trajectories_table
     from flowtracks.scene import Scene
 
-    trajects_hdf = Path("./pyPTV_folder/trajectories.h5")
+    trajects_hdf = Path("./test_h5/test.h5")
     scene = Scene(trajects_hdf)
 
     min_t, max_t = scene.frame_range()
@@ -140,39 +140,15 @@ def _(create_plotly_frame, go, np, time_window, velocity_norm):
         x_circle = 3.5 * np.cos(theta)
         z_circle = 3.5 * np.sin(theta)
 
-        circle_y0 = go.Scatter3d(
-            x=x_circle,
-            y=np.full_like(theta, -2),  # y = 0
-            z=z_circle,
-            mode="lines",
-            line=dict(color="black", width=5, dash="dash"),
-            name="Circle y=0",
-            showlegend=False,
-            hoverinfo="skip"
-        )
-
-        circle_y3 = go.Scatter3d(
-            x=x_circle,
-            y=np.full_like(theta, 2), # y = 3
-            z=z_circle,
-            mode="lines",
-            line=dict(color="black", width=5, dash="dash"),
-            name="Circle y=3",
-            showlegend=False,
-            hoverinfo="skip"
-        )
-
-        # Append the circles to the animation frame
-        frames.extend([circle_y0, circle_y3])
         # -----------------------------------------------------------
 
         fig = go.Figure(data=frames)
 
         fig.update_layout(
             scene=dict(
-                xaxis=dict(range=[-3.5, 3.5], title="X"),
-                yaxis=dict(range=[-3.5, 3.5], title="Y"),  
-                zaxis=dict(range=[-3.5, 3.5], title="Z"),
+                # xaxis=dict(range=[-0.01, 0.01], title="X"),
+                # yaxis=dict(range=[-0.01, 0.01], title="Y"),  
+                # zaxis=dict(range=[-0.01, 0.01], title="Z"),
                 bgcolor="rgb(25, 0, 0)",
                 camera=dict(
                     up=dict(x=0, y=1, z=0),     # Set Y-axis as vertical
