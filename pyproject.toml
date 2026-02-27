@@ -6,10 +6,13 @@ readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
     "flowtracks>=1.1.1",
+    "google-genai>=1.65.0",
     "h5py>=3.15.1",
     "marimo>=0.20.2",
     "matplotlib>=3.10.8",
     "pandas>=3.0.1",
     "plotly>=6.5.2",
+    "pydantic-ai-slim>=1.63.0",
+    "ruff>=0.15.4",
     "tables>=3.11.0",
 ]
