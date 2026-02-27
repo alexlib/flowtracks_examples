@@ -1,0 +1,15 @@
+[project]
+name = "flowtracks-examples"
+version = "0.1.0"
+description = "Gallery of flowtracks notebooks in Jupyter and marimo"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "flowtracks>=1.1.1",
+    "h5py>=3.15.1",
+    "marimo>=0.20.2",
+    "matplotlib>=3.10.8",
+    "pandas>=3.0.1",
+    "plotly>=6.5.2",
+    "tables>=3.11.0",
+]

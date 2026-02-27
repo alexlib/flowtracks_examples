@@ -1,6 +1,0 @@
-tables
-flowtracks @ git+https://github.com/openptv/postptv
-matplotlib
-scipy
-pandas
-plotly
