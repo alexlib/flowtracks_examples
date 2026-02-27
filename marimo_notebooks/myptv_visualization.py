@@ -1,6 +1,6 @@
 import marimo
 
-__generated_with = "0.20.2"
+__generated_with = "0.19.11"
 app = marimo.App()
 
 
@@ -16,62 +16,42 @@ def _():
     import pandas as pd
     import matplotlib.pyplot as plt
     import numpy as np
+    from pathlib import Path
+    from flowtracks.io import trajectories_ptvis
+    from matplotlib.colors import Colormap
+    from mpl_toolkits import mplot3d
 
     # '%matplotlib tk' command supported automatically in marimo
-    return np, pd, plt
+    return Colormap, Path, np, plt, trajectories_ptvis
 
 
 @app.cell
-def _(pd):
-    names=['traj', 'x', 'y', 'z', 'vx', 'vy', 'vz', 'ax', 'ay', 'az', 't']
-    data = pd.read_csv('/Users/alex/Documents/repos/myptv/with_MyPTV/smoothed_trajectories', 
-                       delimiter='\t', names = names, header=None)
-    return (data,)
+def _(Path, trajectories_ptvis):
+
+    # Get the directory of this notebook file
+    notebook_dir = Path(__file__).parent if '__file__' in globals() else Path.cwd()
+    inName = str((notebook_dir / '..' / 'test_data' / 'ptv_is.%d').resolve())
+    trajects = trajectories_ptvis(inName, traj_min_len=10)
+    return (trajects,)
 
 
 @app.cell
-def _(data):
-    data_1 = data[data['traj'] != -1]
-    return (data_1,)
+def _(Colormap, np, plt, trajects):
 
 
-@app.cell
-def _(data_1):
-    ids = list(set(data_1['traj']))
-    # ids.remove(-1)
-    len(ids)
-    return (ids,)
-
-
-@app.cell
-def _(data_1, ids):
-    longs = []
-    for i in ids:
-        tr = data_1[data_1['traj'] == i]
-        if len(tr) > 25:
-            longs.append(tr)
-    print(len(longs))
-    return (longs,)
-
-
-@app.cell
-def _(longs, np, plt):
-    from mpl_toolkits import mplot3d
-    import matplotlib
-    cmap = matplotlib.cm.get_cmap('winter')
+    cmap: Colormap = plt.get_cmap('viridis')
     fig = plt.figure()
     fig.set_size_inches(9, 7)
     ax = fig.add_subplot(projection='3d')
-    for tr_1 in longs:
-        V = np.mean(tr_1['vx'] ** 2 + tr_1['vy'] ** 2 + tr_1['vz'] ** 2) ** 0.5
+    for tr_1 in trajects:
+        V = np.mean(tr_1.velocity()[:, 0] ** 2 + tr_1.velocity()[:, 1] ** 2 + tr_1.velocity()[:, 2] ** 2) ** 0.5
         color = cmap(V / 0.5)
-        ax.plot(tr_1['x'], tr_1['z'], tr_1['y'], color=color)
+        ax.plot(tr_1.pos()[:, 0], tr_1.pos()[:, 2], tr_1.pos()[:, 1], color=color)
     ax.set_xlim(-40, 40)
     ax.set_zlim(-40, 40)
     ax.set_ylim(-40, 40)
-    # fig.savefig('trajs.pdf')
     plt.tight_layout()
-    return (matplotlib,)
+    return (fig,)
 
 
 @app.cell(hide_code=True)
@@ -83,64 +63,53 @@ def _(mo):
 
 
 @app.cell
-def _(matplotlib, plt):
+def _(fig, plt):
     fig_1 = plt.figure()
     fig_1.set_size_inches(9, 8)
-    ax_1 = plt.axes(projection='3d')
+    ax_1 = fig.add_subplot(111, projection='3d')
+
     plt.tight_layout()
+
     ax_1.set_xlim(-40, 40)
-    ax_1.set_zlim(-40, 40)
     ax_1.set_ylim(-40, 40)
+    ax_1.set_zlim(-40, 40)
     ax_1.grid(False)
+
     ax_1.xaxis.pane.set_edgecolor('w')
     ax_1.yaxis.pane.set_edgecolor('w')
     ax_1.zaxis.pane.set_edgecolor('w')
     ax_1.xaxis.pane.fill = False
     ax_1.yaxis.pane.fill = False
     ax_1.zaxis.pane.fill = False
-    matplotlib.rc('axes', edgecolor='w')
     ax_1.tick_params(axis='x', colors='w')
     ax_1.tick_params(axis='y', colors='w')
     ax_1.tick_params(axis='z', colors='w')
-    ax_1.w_xaxis.line.set_color('w')
-    ax_1.w_yaxis.line.set_color('w')
-    ax_1.w_zaxis.line.set_color('w')
     ax_1.set_xticks([])
     ax_1.set_yticks([])
     ax_1.set_zticks([])
     ax_1.set_facecolor((0.1, 0.0, 0.0))
     fig_1.set_facecolor((0.1, 0.0, 0.0))
-    return ax_1, fig_1
+    ax_1.set_xlabel('X [mm]', color='w')
+    ax_1.set_ylabel('Z [mm]', color='w')
+    ax_1.set_zlabel('Y [mm]', color='w')
+    return (ax_1,)
 
 
 @app.cell
-def _(ax_1, data_1, fig_1, longs, matplotlib, np):
-    cmap_1 = matplotlib.cm.get_cmap('winter')
-    frames = list(set(data_1['t']))
-    N = 5
-    for e, frm in enumerate(frames[:]):
+def _(ax_1, np, plt, trajects):
+    cmap_1 = plt.get_cmap('viridis')
+    # Concatenate all trajectory DataFrames to create data_1
+
+
+    # Animation using flowtracks API
+    frames = np.unique(np.concatenate([tr.time() for tr in trajects]))
+    N = 3
+    for e, frm in enumerate(frames):
         ax_1.clear()
-        for tr_2 in longs:
-            tr_seg = tr_2[(tr_2['t'] > frm - N) & (tr_2['t'] < frm + N)]
-            V_1 = np.mean(tr_2['vx'] ** 2 + tr_2['vy'] ** 2 + tr_2['vz'] ** 2) ** 0.5
-            ax_1.plot(tr_seg['x'], tr_seg['z'], tr_seg['y'], color=cmap_1((V_1 - 0.05) / 0.25))
-        ax_1.set_xlim(-40, 40)
-        ax_1.set_zlim(-40, 40)
-        ax_1.set_ylim(-40, 40)
-        ax_1.grid(False)
-        ax_1.xaxis.pane.set_edgecolor('w')
-        ax_1.yaxis.pane.set_edgecolor('w')
-        ax_1.zaxis.pane.set_edgecolor('w')
-        ax_1.xaxis.pane.fill = False
-        ax_1.yaxis.pane.fill = False
-        ax_1.zaxis.pane.fill = False
-        ax_1.w_xaxis.line.set_color('w')  #ax.set_xlabel('x [mm]')
-        ax_1.w_yaxis.line.set_color('w')  #ax.set_ylabel('z [mm]')
-        ax_1.w_zaxis.line.set_color('w')  #ax.set_zlabel('y [mm]')
-        ax_1.set_xticks([])
-        ax_1.set_yticks([])
-        ax_1.set_zticks([])
-        fig_1.savefig('./img/im%03d.jpg' % e)
+        for tr_2 in trajects:
+            mask = (tr_2.time() > frm - N) & (tr_2.time() < frm + N)
+            if np.any(mask):
+                seg = tr_2.pos()[mask]
     return
 
 

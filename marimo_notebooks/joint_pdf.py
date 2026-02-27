@@ -1,6 +1,6 @@
 import marimo
 
-__generated_with = "0.20.2"
+__generated_with = "0.19.11"
 app = marimo.App()
 
 
@@ -83,7 +83,7 @@ def _(np, pl):
 def _():
     from flowtracks.io import Scene
 
-    particles = Scene("./test_h5/traj_GT.h5")
+    particles = Scene("../test_h5/traj_GT.h5")
     return (particles,)
 
 
@@ -146,7 +146,7 @@ def _(np, pl):
             counts[hbin] = len(bin_vals)
             means[hbin] = bin_vals.mean()
             stds[hbin] = bin_vals.std()
-        print(f"counts = {counts}, \n means = {means},\n stds = {stds}")
+        # print(f"counts = {counts}, \n means = {means},\n stds = {stds}")
         bin_halfwidth = 0.5 * (bin_edges[1] - bin_edges[0])
         bin_centers = bin_edges[:-1] + bin_halfwidth
         means[counts < 30] = np.nan
