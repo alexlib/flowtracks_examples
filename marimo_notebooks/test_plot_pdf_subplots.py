@@ -9,7 +9,8 @@ def _():
     import numpy as np
     import matplotlib.pyplot as plt
     from flowtracks.io import iter_trajectories_ptvis
-    # '%matplotlib inline' command supported automatically in marimo
+    from mpl_toolkits.mplot3d import Axes3D
+
     return iter_trajectories_ptvis, np, plt
 
 
@@ -40,7 +41,8 @@ def _(trajects):
 
 @app.cell
 def _(plt, trajects):
-    from mpl_toolkits.mplot3d import Axes3D
+
+
     _fig = plt.figure(figsize=(12, 10))
     ax = _fig.add_subplot(111, projection='3d')
     for _tr in trajects:  # generate one trajectory per loop call

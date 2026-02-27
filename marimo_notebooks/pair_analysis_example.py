@@ -29,7 +29,7 @@ def _(np, particles, pd):
         tr = particles.trajectory_by_id(id)
         pos.append(np.c_[tr.pos()[:,0],tr.pos()[:,1],tr.pos()[:,2]])
         vel.append(np.c_[tr.velocity()[:,0],tr.velocity()[:,1],tr.velocity()[:,2]])
-    
+
     df = pd.DataFrame(np.c_[np.vstack(pos),np.vstack(vel)])
     df.columns = ['x','y','z','u','v','w']
     df['vel'] = np.sqrt(df['u']**2+df['v']**2+df['w']**2)
@@ -44,8 +44,8 @@ def _(df):
 
 @app.cell
 def _(df, px):
-    fig = px.scatter_3d(df,x='x',y='y',z='z',color=df.vel)
-    
+    fig = px.scatter_3d(df,x='x',y='y',z='z',color=df.vel, opacity=0.5)
+
     fig.show()
     return
 

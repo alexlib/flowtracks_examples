@@ -19,38 +19,12 @@ uv sync
 
 ## Running the Examples
 
-To run the main script:
-```bash
-uv marimo edit marimo_notebooks/gallery.py
-```
-
-## Viewing Jupyter Notebooks Locally
-
-If you want to run Jupyter notebooks, install Jupyter with uv:
-```bash
-uv pip install jupyter
-```
-Then launch Jupyter:
-```bash
-uv pip run jupyter notebook
-```
-Open the `jupyter_notebooks` folder and run any notebook.
-
-## Optional: Jupyter Notebooks
-
-If you want to run Jupyter notebooks, install Jupyter with uv:
+To run it without installations:
 
 ```bash
-uv pip install jupyter
+uvx marimo run gallery.py
 ```
 
-Then launch Jupyter:
-
-```bash
-uv pip run jupyter notebook
-```
-
-Open the `jupyter_notebooks` folder and run any notebook.
 
 ## Test Data
 
