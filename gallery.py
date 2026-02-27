@@ -16,7 +16,7 @@ def _():
 
 @app.cell
 def _(mo, os, subprocess, sys):
-    _notebook_dir = "marimo_notebooks"
+    _notebook_dir = "notebooks"
     _notebook_files = sorted([f for f in os.listdir(_notebook_dir) if f.endswith(".py")]) if os.path.exists(_notebook_dir) else []
 
     def _open_nb(path):
