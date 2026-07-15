@@ -33,10 +33,14 @@ def _():
 
 @app.cell
 def _(Path, trajectories_ptvis):
+    base_dir = Path(__file__).parent if '__file__' in globals() else Path.cwd()
+    if (base_dir / 'test_data').exists():
+        inName = str((base_dir / 'test_data' / 'ptv_is.%d').resolve())
+    elif (base_dir / '..' / 'test_data').exists():
+        inName = str((base_dir / '..' / 'test_data' / 'ptv_is.%d').resolve())
+    else:
+        inName = './test_data/ptv_is.%d'
 
-    # Get the directory of this notebook file
-    notebook_dir = Path(__file__).parent if '__file__' in globals() else Path.cwd()
-    inName = str((notebook_dir / '..' / 'test_data' / 'ptv_is.%d').resolve())
     trajects = trajectories_ptvis(inName, traj_min_len=10)
     return (trajects,)
 
@@ -69,10 +73,10 @@ def _(mo):
 
 
 @app.cell
-def _(fig, plt):
+def _(plt):
     fig_1 = plt.figure()
     fig_1.set_size_inches(9, 8)
-    ax_1 = fig.add_subplot(111, projection='3d')
+    ax_1 = fig_1.add_subplot(111, projection='3d')
 
     plt.tight_layout()
 
@@ -119,14 +123,17 @@ def _(ax_1, np, plt, trajects):
     return
 
 
-app._unparsable_cell(
-    r"""
+@app.cell
+def _():
+    # Note: env is not defined in this notebook, so this cell is kept as a commented reference.
+    # To run this, env must be defined.
+    """
     import numpy as np
     import plotly.graph_objects as go
 
     fig = go.Figure(
     data=[go.Scatter3d(x=env.xsuc, y=env.ysuc, z=env.zsuc,
-    mode=“markers”,marker=dict(color=“darkolivegreen”, size=10)),
+    mode="markers",marker=dict(color="darkolivegreen", size=10)),
     ])
 
 
@@ -153,13 +160,12 @@ app._unparsable_cell(
                                                       args=[None, 
                                                             dict(frame=dict(redraw=True,
                                                                             fromcurrent=True, 
-                                                                            mode=‘immediate’)) ])])])
+                                                                            mode='immediate')) ])])])
     fig.update_scenes(xaxis=dict(range=[0.2, 3.8],title="X-axis", autorange=False),
                       yaxis=dict(range=[-0.334,+0.334],title="Y-axis", autorange=False),
                       zaxis=dict(range=[0.7, 1.1],title ="Z-axis", autorange=False))
-    """,
-    name="_"
-)
+    """
+    return
 
 
 if __name__ == "__main__":

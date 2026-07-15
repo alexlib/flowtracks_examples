@@ -96,7 +96,10 @@ def _(Trajectory, hdf5storage, np, os):
 
 @app.cell
 def _(trajectories_mat_73):
-    trajects_GT = trajectories_mat_73('traj_GT.mat')
+    from pathlib import Path as _Path
+    _base_dir = _Path(__file__).parent if '__file__' in globals() else _Path.cwd()
+    _mat_dir = _base_dir if (_base_dir / 'traj_GT.mat').exists() else (_base_dir / 'test_mat' if (_base_dir / 'test_mat').exists() else _base_dir / '..' / 'test_mat')
+    trajects_GT = trajectories_mat_73(str(_mat_dir / 'traj_GT.mat'))
     return (trajects_GT,)
 
 
@@ -110,7 +113,10 @@ def _(plt, trajects_GT):
 
 @app.cell
 def _(trajectories_mat_73):
-    trajects_RC = trajectories_mat_73('traj_RC.mat',data_name='traj')
+    from pathlib import Path as _Path
+    _base_dir = _Path(__file__).parent if '__file__' in globals() else _Path.cwd()
+    _mat_dir = _base_dir if (_base_dir / 'traj_RC.mat').exists() else (_base_dir / 'test_mat' if (_base_dir / 'test_mat').exists() else _base_dir / '..' / 'test_mat')
+    trajects_RC = trajectories_mat_73(str(_mat_dir / 'traj_RC.mat'),data_name='traj')
     return (trajects_RC,)
 
 

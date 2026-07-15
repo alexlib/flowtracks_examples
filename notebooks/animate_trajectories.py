@@ -32,7 +32,8 @@ def _(Path, mo, np):
     from flowtracks.io import trajectories_table
     from flowtracks.scene import Scene
 
-    trajects_hdf = Path("./test_h5/test.h5")
+    base_dir = Path(__file__).parent if '__file__' in globals() else Path.cwd()
+    trajects_hdf = base_dir / 'test_h5' / 'test.h5' if (base_dir / 'test_h5').exists() else base_dir / '..' / 'test_h5' / 'test.h5'
     scene = Scene(trajects_hdf)
 
     min_t, max_t = scene.frame_range()

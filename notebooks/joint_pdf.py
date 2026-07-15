@@ -87,9 +87,11 @@ def _(np, pl):
 
 @app.cell
 def _():
-    from flowtracks.io import Scene
+    from flowtracks.scene import Scene
+    from pathlib import Path
 
-    particles = Scene("../test_h5/traj_GT.h5")
+    path = Path("./test_h5/traj_GT.h5") if Path("./test_h5").exists() else Path("../test_h5/traj_GT.h5")
+    particles = Scene(str(path))
     return (particles,)
 
 

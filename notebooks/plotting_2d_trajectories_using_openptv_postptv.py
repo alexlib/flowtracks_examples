@@ -32,7 +32,7 @@ def _():
     from matplotlib import pyplot
     from flowtracks.io import trajectories_ptvis
 
-    return (pyplot,)
+    return pyplot, trajectories_ptvis
 
 
 @app.cell(hide_code=True)
@@ -46,12 +46,13 @@ def _(mo):
 
 
 @app.cell
-def _():
-    # magic command not supported in marimo; please file an issue to add support
-    # %%debug
-    # inName = './test_data/xuap.%d'
-    # trajects = trajectories_ptvis(inName, traj_min_len=5, xuap=True)
-    return
+def _(trajectories_ptvis):
+    from pathlib import Path
+    base_dir = Path(__file__).parent if '__file__' in globals() else Path.cwd()
+    data_dir = base_dir if (base_dir / 'test_data').exists() else base_dir / '..' / 'test_data'
+    inName = str(data_dir / 'ptv_is.%d')
+    trajects = trajectories_ptvis(inName, traj_min_len=3)
+    return inName, trajects
 
 
 @app.cell(hide_code=True)

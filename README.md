@@ -10,25 +10,46 @@ cd flowtracks_examples
 
 Install *uv* (if not already installed):
 
-
 Install dependencies and sync environment using uv:
 ```bash
-uv pip install --upgrade pip
+uv sync
+```
+
+If you are developing alongside the `postptv` library, you can point the
+dependency to a local checkout instead of the published package:
+
+```bash
+# In pyproject.toml, add (or uncomment):
+#
+# [tool.uv.sources]
+# flowtracks = { path = "../postptv", editable = true }
+#
+# Then re-lock:
+uv lock
 uv sync
 ```
 
 ## Running the Examples
 
-To run it without installations:
+To run the notebook gallery without installation:
 
 ```bash
 uvx marimo run gallery.py
 ```
 
+Individual notebooks can also be opened directly:
+
+```bash
+# Open a single notebook
+uv run marimo run notebooks/postptv_EX3915.py
+```
 
 ## Test Data
 
-Test data is available in the `test_data` folder.
+Test data is available in the `test_data` folder (ptv_is, xuap, xuag, and
+trajPoint files for frames 101000–101025) and the `test_h5` folder (pre-built
+HDF5 Scene files).  Some examples also use files in `test_mat/`.
+
 ## Example Notebooks and Online Viewing
 
 Flowtracks documentation: https://flowtracks.readthedocs.io/en/latest/
@@ -40,11 +61,14 @@ You can view the example notebooks directly on molab.marimo.io:
 1. Go to https://molab.marimo.io
 2. Click "Open from GitHub"
 3. Enter the repository URL: `https://github.com/openptv/flowtracks_examples`
-4. Browse and open any notebook from the `jupyter_notebooks` folder
+4. Browse and open any notebook from the `notebooks` folder
 
 ## Flowtracks Example Notebooks
 
-Welcome to the Flowtracks example notebooks! These interactive marimo notebooks demonstrate the core features and strengths of Flowtracks, including flexible data loading, powerful visualization, and advanced analysis tools for particle tracking data.
+Welcome to the Flowtracks example notebooks! These interactive marimo notebooks
+demonstrate the core features and strengths of Flowtracks, including flexible
+data loading, powerful visualization, and advanced analysis tools for particle
+tracking data.
 
 ## Table of Contents
 - [Getting Started](#getting-started)

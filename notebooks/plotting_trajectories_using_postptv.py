@@ -47,7 +47,10 @@ def _(mo):
 
 @app.cell
 def _(trajectories_ptvis):
-    inName = './test_data/ptv_is.%d'
+    from pathlib import Path
+    base_dir = Path(__file__).parent if '__file__' in globals() else Path.cwd()
+    data_dir = base_dir if (base_dir / 'test_data').exists() else base_dir / '..' / 'test_data'
+    inName = str(data_dir / 'ptv_is.%d')
     trajects = trajectories_ptvis(inName, traj_min_len=3)
     return (trajects,)
 

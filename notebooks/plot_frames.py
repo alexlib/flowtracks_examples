@@ -24,15 +24,19 @@ def _():
 @app.cell
 def _(io):
     # get frames where trajectories appeared 
-    frames_range = [int(tr.time()[-1]) for tr in io.iter_trajectories_ptvis('./test_data/ptv_is.%d')]
+    from pathlib import Path as _Path
+    _base_dir = _Path(__file__).parent if '__file__' in globals() else _Path.cwd()
+    _data_dir = _base_dir if (_base_dir / 'test_data').exists() else _base_dir / '..' / 'test_data'
+    inName = str(_data_dir / 'ptv_is.%d')
+    frames_range = [int(tr.time()[-1]) for tr in io.iter_trajectories_ptvis(inName)]
     print(frames_range[0],frames_range[-1])
-    return
+    return (inName,)
 
 
 @app.cell
-def _(io):
+def _(inName, io):
     max_frame = 101010
-    trajectories = [tr for tr in io.iter_trajectories_ptvis('./test_data/ptv_is.%d') if tr.time()[-1] <= max_frame]
+    trajectories = [tr for tr in io.iter_trajectories_ptvis(inName) if tr.time()[-1] <= max_frame]
     print(f"{len(trajectories)} trajectories")
     return (trajectories,)
 
@@ -80,7 +84,7 @@ def _():
 
 @app.cell
 def _():
-    # from flowtracks.io import Scene
+    # from flowtracks.scene import Scene
     from flowtracks.scene import Scene
     from flowtracks.graphics import pdf_graph
 
@@ -89,7 +93,10 @@ def _():
 
 @app.cell
 def _(Scene):
-    scn = Scene('./test_h5/traj_RC.h5')
+    from pathlib import Path as _Path
+    _base_dir = _Path(__file__).parent if '__file__' in globals() else _Path.cwd()
+    _h5_path = _base_dir / 'test_h5' / 'traj_RC.h5' if (_base_dir / 'test_h5').exists() else _base_dir / '..' / 'test_h5' / 'traj_RC.h5'
+    scn = Scene(str(_h5_path))
     return (scn,)
 
 

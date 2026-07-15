@@ -68,7 +68,7 @@ def _(Trajectory, h5py, np, os):
             one for each trajectory contained in the mat file.
         """
 
-        with h5py.File(os.path.expanduser(fname),'r+') as f:
+        with h5py.File(os.path.expanduser(fname),'r') as f:
 
             # Get the workspace variable holding the trajectories:
             data_name = [s for s in f.keys() \
@@ -110,7 +110,10 @@ def _(Trajectory, h5py, np, os):
 
 @app.cell
 def _(trajectories_mat_h5py):
-    trajects_GT = trajectories_mat_h5py('./test_mat/traj_GT.mat')
+    from pathlib import Path as _Path
+    _base_dir = _Path(__file__).parent if '__file__' in globals() else _Path.cwd()
+    _mat_dir = _base_dir if (_base_dir / 'traj_GT.mat').exists() else (_base_dir / 'test_mat' if (_base_dir / 'test_mat').exists() else _base_dir / '..' / 'test_mat')
+    trajects_GT = trajectories_mat_h5py(str(_mat_dir / 'traj_GT.mat'))
     return (trajects_GT,)
 
 
@@ -124,7 +127,10 @@ def _(plt, trajects_GT):
 
 @app.cell
 def _(trajectories_mat_h5py):
-    trajects_RC = trajectories_mat_h5py('./test_mat/traj_RC.mat')
+    from pathlib import Path as _Path
+    _base_dir = _Path(__file__).parent if '__file__' in globals() else _Path.cwd()
+    _mat_dir = _base_dir if (_base_dir / 'traj_RC.mat').exists() else (_base_dir / 'test_mat' if (_base_dir / 'test_mat').exists() else _base_dir / '..' / 'test_mat')
+    trajects_RC = trajectories_mat_h5py(str(_mat_dir / 'traj_RC.mat'))
     return (trajects_RC,)
 
 
@@ -139,8 +145,11 @@ def _(plt, trajects_RC):
 @app.cell
 def _(trajects_GT, trajects_RC):
     from flowtracks.io import save_particles_table
-    save_particles_table('traj_GT.h5',trajects_GT)
-    save_particles_table('traj_RC.h5',trajects_RC)
+    from pathlib import Path as _Path
+    _base_dir = _Path(__file__).parent if '__file__' in globals() else _Path.cwd()
+    _h5_dir = _base_dir if (_base_dir / 'test_h5').exists() else _base_dir / '..' / 'test_h5'
+    save_particles_table(str(_h5_dir / 'traj_GT.h5'), trajects_GT)
+    save_particles_table(str(_h5_dir / 'traj_RC.h5'), trajects_RC)
     return
 
 

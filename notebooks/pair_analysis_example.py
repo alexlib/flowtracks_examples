@@ -12,7 +12,7 @@ app = marimo.App()
 
 @app.cell
 def _():
-    from flowtracks.io import Scene
+    from flowtracks.scene import Scene
     import numpy as np
 
     # install plotly express https://plot.ly/python/getting-started/
@@ -24,7 +24,10 @@ def _():
 
 @app.cell
 def _(Scene):
-    particles = Scene('./test_h5/traj_GT.h5')
+    from pathlib import Path
+    base_dir = Path(__file__).parent if '__file__' in globals() else Path.cwd()
+    h5_path = base_dir / 'test_h5' / 'traj_GT.h5' if (base_dir / 'test_h5').exists() else base_dir / '..' / 'test_h5' / 'traj_GT.h5'
+    particles = Scene(str(h5_path))
     return (particles,)
 
 

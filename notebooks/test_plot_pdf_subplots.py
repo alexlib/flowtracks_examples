@@ -23,7 +23,10 @@ def _():
 @app.cell
 def _():
     # see openptv forum for Christophe Henry messages
-    inName = "./test_data/ptv_is.%d" 
+    from pathlib import Path
+    base_dir = Path(__file__).parent if '__file__' in globals() else Path.cwd()
+    data_dir = base_dir if (base_dir / 'test_data').exists() else base_dir / '..' / 'test_data'
+    inName = str(data_dir / 'ptv_is.%d')
     # or use the test data
     # inName = "./test_data/ptv_is.%d" # the directory with the input files
     return (inName,)

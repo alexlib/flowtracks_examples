@@ -34,22 +34,25 @@ def _():
 
 
 @app.cell
-def _(mo):
+def _(mo, Path):
+    default_in = "./test_data/ptv_is.%d" if Path("./test_data").exists() else "../test_data/ptv_is.%d"
+    default_out = "./test_h5/trajectories.h5" if Path("./test_h5").exists() else "../test_h5/trajectories.h5"
+
     inName_ui = mo.ui.text(
         full_width=True,
-        value="./pyPTV_folder/res/ptv_is.%d",
+        value=default_in,
         label="inName:"
     )
 
     trajects_hdf_ui = mo.ui.text(
         full_width=True,
-        value="./pyPTV_folder/trajectories.h5",
+        value=default_out,
         label="Save file name:"
     )
 
     min_length_ui = mo.ui.number(
         full_width=True,
-        value=50,
+        value=3,
         label="Minimum trajectory length:"
     )
 
