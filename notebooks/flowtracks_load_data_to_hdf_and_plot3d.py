@@ -14,7 +14,9 @@ app = marimo.App(width="medium", auto_download=["ipynb"])
 def _():
     import marimo as mo
     from flowtracks.io import (
-        trajectories_ptvis,
+        trajectories,
+        read_zarr_trajectories,
+        save_zarr_trajectories,
         save_particles_table,
         trajectories_table,
     )
@@ -27,8 +29,10 @@ def _():
         Path,
         mo,
         plt,
+        read_zarr_trajectories,
+        save_zarr_trajectories,
         save_particles_table,
-        trajectories_ptvis,
+        trajectories,
         trajectories_table,
     )
 
@@ -36,18 +40,18 @@ def _():
 @app.cell
 def _(mo, Path):
     default_in = "./test_data/ptv_is.%d" if Path("./test_data").exists() else "../test_data/ptv_is.%d"
-    default_out = "./test_h5/trajectories.h5" if Path("./test_h5").exists() else "../test_h5/trajectories.h5"
+    default_out = "./test_zarr/trajectories.zarr" if Path("./test_zarr").exists() else "./run.zarr"
 
     inName_ui = mo.ui.text(
         full_width=True,
         value=default_in,
-        label="inName:"
+        label="Input Data Path (.zarr, ptv_is.%d, or .h5):"
     )
 
-    trajects_hdf_ui = mo.ui.text(
+    trajects_out_ui = mo.ui.text(
         full_width=True,
         value=default_out,
-        label="Save file name:"
+        label="Export Zarr Store Name (.zarr):"
     )
 
     min_length_ui = mo.ui.number(
@@ -56,8 +60,8 @@ def _(mo, Path):
         label="Minimum trajectory length:"
     )
 
-    mo.vstack([inName_ui, trajects_hdf_ui, min_length_ui])
-    return inName_ui, min_length_ui, trajects_hdf_ui
+    mo.vstack([inName_ui, trajects_out_ui, min_length_ui])
+    return inName_ui, min_length_ui, trajects_out_ui
 
 
 @app.cell
@@ -65,23 +69,24 @@ def _(
     Path,
     inName_ui,
     min_length_ui,
-    save_particles_table,
-    trajectories_ptvis,
-    trajectories_table,
-    trajects_hdf_ui,
+    read_zarr_trajectories,
+    save_zarr_trajectories,
+    trajectories,
+    trajects_out_ui,
 ):
     inName = inName_ui.value
-    trajects_hdf = trajects_hdf_ui.value
+    trajects_zarr = trajects_out_ui.value
 
-    # print(Path(trajects_hdf).exists())
-
-    if not Path(trajects_hdf).exists():
-        trajects = trajectories_ptvis(inName, traj_min_len=min_length_ui.value)
-        save_particles_table(trajects_hdf, trajects)
-        print("Loaded from /res and saved to hdf5")
+    out_p = Path(trajects_zarr)
+    if not out_p.exists():
+        trajects = trajectories(inName, traj_min_len=min_length_ui.value)
+        save_zarr_trajectories(trajects, trajects_zarr, group="trajectories")
+        print(f"Loaded trajectories from '{inName}' and exported Zarr store -> '{trajects_zarr}'")
     else:
-        trajects = trajectories_table(trajects_hdf)
-        print("Loaded using flowtracks")
+        trajects = read_zarr_trajectories(trajects_zarr, group="trajectories")
+        if not trajects:
+            trajects = trajectories(inName, traj_min_len=min_length_ui.value)
+        print(f"Loaded trajectories from Zarr store '{trajects_zarr}' for post-analysis")
     return (trajects,)
 
 
