@@ -71,24 +71,58 @@ def _(mo):
 
 
 @app.cell
-def _(pyplot, trajects):
-    pyplot.figure(figsize=(12, 10))
-    for _traj in trajects:
-        pyplot.plot(_traj.pos()[:, 0], _traj.pos()[:, 1], '.')
-    pyplot.show()
+def _(mo, trajects):
+    import plotly.graph_objects as go
+
+    fig = go.Figure()
+    for tr in trajects:
+        p = tr.pos()
+        fig.add_trace(
+            go.Scatter(
+                x=p[:, 0],
+                y=p[:, 1],
+                mode="lines+markers",
+                marker=dict(size=4),
+                name=f"ID {tr.trajid()}",
+                showlegend=False,
+            )
+        )
+    fig.update_layout(
+        title="2D XY Trajectory Projection (Plotly)",
+        xaxis_title="X",
+        yaxis_title="Y",
+        height=500,
+    )
+    mo.ui.plotly(fig)
     return
 
 
 @app.cell
-def _(trajects):
-    import matplotlib.pyplot as plt
-    from mpl_toolkits.mplot3d import Axes3D
-    fig = plt.figure(figsize=(10, 8))
-    ax = fig.add_subplot(111, projection='3d')
-    for _traj in trajects:
-        ax.plot(_traj.pos()[:, 0], _traj.pos()[:, 1], _traj.pos()[:, 2], '.')
-    plt.show()
+def _(mo, trajects):
+    import plotly.graph_objects as go
+
+    fig = go.Figure()
+    for tr in trajects:
+        p = tr.pos()
+        fig.add_trace(
+            go.Scatter3d(
+                x=p[:, 0],
+                y=p[:, 1],
+                z=p[:, 2],
+                mode="lines+markers",
+                marker=dict(size=2),
+                name=f"ID {tr.trajid()}",
+                showlegend=False,
+            )
+        )
+    fig.update_layout(
+        title="Interactive 3D Trajectories (Plotly)",
+        scene=dict(xaxis_title="X", yaxis_title="Y", zaxis_title="Z"),
+        height=600,
+    )
+    mo.ui.plotly(fig)
     return
+
 
 
 if __name__ == "__main__":

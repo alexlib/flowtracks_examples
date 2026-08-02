@@ -91,22 +91,38 @@ def _(
 
 
 @app.cell
-def _(mo, plt, trajects):
-    # 2. Create a figure and add 3D axes
-    fig = plt.figure()
-    # The 'projection="3d"' keyword enables the 3D functionality
-    ax = fig.add_subplot(111, projection="3d")
+def _(mo, trajects):
+    import plotly.graph_objects as go
+
+    fig = go.Figure()
     for traj in trajects:
-        # Swap y and z to make y vertical (which is the z-axis in matplotlib 3d)
-        # x -> x, z -> y (depth), y -> z (vertical)
-        ax.plot(traj.pos()[:, 0], traj.pos()[:, 2], traj.pos()[:, 1])
+        p = traj.pos()
+        fig.add_trace(
+            go.Scatter3d(
+                x=p[:, 0],
+                y=p[:, 1],
+                z=p[:, 2],
+                mode="lines+markers",
+                marker=dict(size=2),
+                name=f"ID {traj.trajid()}",
+                showlegend=False,
+            )
+        )
 
-    ax.set_xlabel("x")
-    ax.set_ylabel("z")
-    ax.set_zlabel("y")
+    fig.update_layout(
+        scene=dict(
+            xaxis_title="X",
+            yaxis_title="Y",
+            zaxis_title="Z",
+        ),
+        margin=dict(l=0, r=0, b=0, t=30),
+        title="Interactive 3D Trajectories (Plotly)",
+        height=600,
+    )
 
-    mo.mpl.interactive(fig)
+    mo.ui.plotly(fig)
     return
+
 
 
 if __name__ == "__main__":

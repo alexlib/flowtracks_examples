@@ -1,3 +1,14 @@
+# /// script
+# requires-python = ">=3.11"
+# dependencies = [
+#     "flowtracks==1.1.1",
+#     "matplotlib==3.11.1",
+#     "numpy==2.4.6",
+#     "plotly==6.9.0",
+#     "xarray==2026.7.0",
+#     "zarr==3.1.6",
+# ]
+# ///
 import marimo
 
 __generated_with = "0.23.16"

@@ -46,22 +46,52 @@ def _(Path, trajectories_ptvis):
 
 
 @app.cell
-def _(Colormap, np, plt, trajects):
+def _(mo, np, trajects):
+    import plotly.graph_objects as go
 
+    fig = go.Figure()
+    v_max = 0.5
+    for tr in trajects:
+        vel = tr.velocity()
+        if len(vel) > 0:
+            speed = np.linalg.norm(vel, axis=1)
+            mean_speed = np.mean(speed)
+        else:
+            mean_speed = 0.0
 
-    cmap: Colormap = plt.get_cmap('viridis')
-    fig = plt.figure()
-    fig.set_size_inches(9, 7)
-    ax = fig.add_subplot(projection='3d')
-    for tr_1 in trajects:
-        V = np.mean(tr_1.velocity()[:, 0] ** 2 + tr_1.velocity()[:, 1] ** 2 + tr_1.velocity()[:, 2] ** 2) ** 0.5
-        color = cmap(V / 0.5)
-        ax.plot(tr_1.pos()[:, 0], tr_1.pos()[:, 2], tr_1.pos()[:, 1], color=color)
-    ax.set_xlim(-40, 40)
-    ax.set_zlim(-40, 40)
-    ax.set_ylim(-40, 40)
-    plt.tight_layout()
-    return (fig,)
+        p = tr.pos()
+        fig.add_trace(
+            go.Scatter3d(
+                x=p[:, 0],
+                y=p[:, 1],
+                z=p[:, 2],
+                mode="lines+markers",
+                marker=dict(
+                    size=3,
+                    color=speed if len(vel) > 0 else "blue",
+                    colorscale="Viridis",
+                    cmin=0,
+                    cmax=v_max,
+                    showscale=False,
+                ),
+                line=dict(
+                    color=f"rgb({int(255*min(1.0, mean_speed/v_max))}, 100, 200)",
+                    width=3,
+                ),
+                name=f"ID {tr.trajid()}",
+                showlegend=False,
+            )
+        )
+
+    fig.update_layout(
+        title="Speed-Colormapped 3D Trajectories (Plotly Viridis)",
+        scene=dict(xaxis_title="X [mm]", yaxis_title="Y [mm]", zaxis_title="Z [mm]"),
+        height=600,
+    )
+
+    mo.ui.plotly(fig)
+    return
+
 
 
 @app.cell(hide_code=True)

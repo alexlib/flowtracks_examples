@@ -118,10 +118,15 @@ def _(trajectories_mat_h5py):
 
 
 @app.cell
-def _(plt, trajects_GT):
+def _(mo, trajects_GT):
+    import plotly.graph_objects as go
+
+    fig = go.Figure()
     for _traj in trajects_GT:
-        plt.plot(_traj.pos()[:, 0], _traj.pos()[:, 1], '.')  # traj is a Trajectory object, supplied by the
-    plt.show()  # flowtracks.trajectory module.
+        p = _traj.pos()
+        fig.add_trace(go.Scatter(x=p[:, 0], y=p[:, 1], mode="lines+markers", marker=dict(size=3), showlegend=False))
+    fig.update_layout(title="Alex Ruiz GT Trajectories (Plotly h5py)", xaxis_title="X", yaxis_title="Y", height=450)
+    mo.ui.plotly(fig)
     return
 
 
@@ -135,11 +140,17 @@ def _(trajectories_mat_h5py):
 
 
 @app.cell
-def _(plt, trajects_RC):
+def _(mo, trajects_RC):
+    import plotly.graph_objects as go
+
+    fig = go.Figure()
     for _traj in trajects_RC:
-        plt.plot(_traj.pos()[:, 0], _traj.pos()[:, 1], '.')  # traj is a Trajectory object, supplied by the
-    plt.show()  # flowtracks.trajectory module.
+        p = _traj.pos()
+        fig.add_trace(go.Scatter(x=p[:, 0], y=p[:, 1], mode="lines+markers", marker=dict(size=3), showlegend=False))
+    fig.update_layout(title="Alex Ruiz RC Trajectories (Plotly h5py)", xaxis_title="X", yaxis_title="Y", height=450)
+    mo.ui.plotly(fig)
     return
+
 
 
 @app.cell

@@ -71,14 +71,31 @@ def _(mo):
 
 
 @app.cell
-def _(pyplot, trajects):
-    pyplot.figure(figsize = (12, 10))
+def _(mo, trajects):
+    import plotly.graph_objects as go
 
+    fig = go.Figure()
     for traj in trajects:
-    	pyplot.plot(traj.pos()[:,0], traj.pos()[:,1], '.')
-
-    pyplot.show()
+        p = traj.pos()
+        fig.add_trace(
+            go.Scatter(
+                x=p[:, 0],
+                y=p[:, 1],
+                mode="lines+markers",
+                marker=dict(size=4),
+                name=f"ID {traj.trajid()}",
+                showlegend=False,
+            )
+        )
+    fig.update_layout(
+        title="2D Trajectories Projection (Plotly)",
+        xaxis_title="X",
+        yaxis_title="Y",
+        height=500,
+    )
+    mo.ui.plotly(fig)
     return
+
 
 
 if __name__ == "__main__":

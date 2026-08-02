@@ -42,32 +42,50 @@ def _(inName, io):
 
 
 @app.cell
-def _(plt, trajectories):
-    _fig, _ax = plt.subplots(1, 2, figsize=(12, 5))
+def _(mo, trajectories):
+    import plotly.graph_objects as go
+    from plotly.subplots import make_subplots
+
+    fig = make_subplots(
+        rows=1, cols=2,
+        subplot_titles=("XY Projection", "YZ Projection")
+    )
+
     for tr in trajectories:
-        _ax[0].plot(tr.pos()[:, 0], tr.pos()[:, 1])
-        _ax[0].plot(tr.pos()[0, 0], tr.pos()[0, 1], '.')
-        _ax[0].set_xlabel('$x$', fontsize=16)
-        _ax[0].set_ylabel('$y$', fontsize=16)
-        _ax[1].plot(tr.pos()[:, 1], tr.pos()[:, 2])
-        _ax[1].plot(tr.pos()[0, 1], tr.pos()[0, 2], '.')
-        _ax[1].set_xlabel('$y$', fontsize=16)
-        _ax[1].set_ylabel('$z$', fontsize=16)
+        p = tr.pos()
+        fig.add_trace(
+            go.Scatter(x=p[:, 0], y=p[:, 1], mode="lines+markers", marker=dict(size=3), showlegend=False),
+            row=1, col=1
+        )
+        fig.add_trace(
+            go.Scatter(x=p[:, 1], y=p[:, 2], mode="lines+markers", marker=dict(size=3), showlegend=False),
+            row=1, col=2
+        )
+
+    fig.update_layout(title="Multi-Panel 2D Frame Snapshots (Plotly)", height=450)
+    mo.ui.plotly(fig)
     return
 
 
 @app.cell
-def _(plt, trajectories):
-    from mpl_toolkits.mplot3d import Axes3D
-    _fig = plt.figure(figsize=(8, 6))
-    _ax = _fig.add_subplot(111, projection='3d')
+def _(mo, trajectories):
+    import plotly.graph_objects as go
+
+    fig = go.Figure()
     for traj in trajectories:
-        _ax.plot(traj.pos()[:, 0], traj.pos()[:, 1], traj.pos()[:, 2], '-', lw=3)
-        _ax.set_xlabel('$x$', fontsize=16)
-        _ax.set_ylabel('$y$', fontsize=16)
-        _ax.set_zlabel('$z$', fontsize=16)
-    plt.show()
+        p = traj.pos()
+        fig.add_trace(
+            go.Scatter3d(x=p[:, 0], y=p[:, 1], z=p[:, 2], mode="lines", line=dict(width=4), showlegend=False)
+        )
+
+    fig.update_layout(
+        title="3D Frame Snapshot Trajectories (Plotly)",
+        scene=dict(xaxis_title="X", yaxis_title="Y", zaxis_title="Z"),
+        height=550,
+    )
+    mo.ui.plotly(fig)
     return
+
 
 
 @app.cell

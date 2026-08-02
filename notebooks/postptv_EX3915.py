@@ -46,13 +46,31 @@ def _(trajects):
 
 
 @app.cell
-def _(plt, trajects):
-    from mpl_toolkits.mplot3d import Axes3D
-    _fig = plt.figure(figsize=(12, 10))
-    ax = _fig.add_subplot(111, projection='3d')
-    for _tr in trajects:  # generate one trajectory per loop call
-        plt.plot(_tr.pos()[:, 0], _tr.pos()[:, 1], _tr.pos()[:, 2], '-o')
+def _(mo, trajects):
+    import plotly.graph_objects as go
+
+    fig = go.Figure()
+    for _tr in trajects:
+        p = _tr.pos()
+        fig.add_trace(
+            go.Scatter3d(
+                x=p[:, 0],
+                y=p[:, 1],
+                z=p[:, 2],
+                mode="lines+markers",
+                marker=dict(size=3),
+                name=f"ID {_tr.trajid()}",
+                showlegend=False,
+            )
+        )
+    fig.update_layout(
+        title="Interactive 3D Trajectories (Plotly)",
+        scene=dict(xaxis_title="X", yaxis_title="Y", zaxis_title="Z"),
+        height=600,
+    )
+    mo.ui.plotly(fig)
     return
+
 
 
 @app.cell
