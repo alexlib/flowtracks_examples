@@ -1,95 +1,60 @@
-# flowtracks_examples
+# 🌊 flowtracks_examples
 
-## Getting Started (Local Setup)
+[![Python](https://img.shields.io/badge/Python-3.11%2B-blue.svg)](https://www.python.org/)
+[![marimo](https://img.shields.io/badge/marimo-notebooks-purple.svg)](https://marimo.io)
+[![Zarr](https://img.shields.io/badge/Zarr-3.0%2B-green.svg)](https://zarr.dev)
+[![uv](https://img.shields.io/badge/managed_by-uv-261230.svg)](https://github.com/astral-sh/uv)
+[![OpenPTV](https://img.shields.io/badge/OpenPTV-Ecosystem-orange.svg)](https://github.com/openptv)
 
-Clone the repository:
-```bash
-git clone https://github.com/openptv/flowtracks_examples.git
-cd flowtracks_examples
-```
-
-Install *uv* (if not already installed):
-
-Install dependencies and sync environment using uv:
-```bash
-uv sync
-```
-
-If you are developing alongside the `postptv` library, you can point the
-dependency to a local checkout instead of the published package:
-
-```bash
-# In pyproject.toml, add (or uncomment):
-#
-# [tool.uv.sources]
-# flowtracks = { path = "../postptv", editable = true }
-#
-# Then re-lock:
-uv lock
-uv sync
-```
-
-## 🚀 Online Instant Run (Zero Setup via molab)
-
-You can run the interactive gallery and individual notebooks directly in your browser without installing anything locally via **[molab.marimo.io](https://molab.marimo.io)**:
-
-1. Launch **[molab.marimo.io](https://molab.marimo.io)**.
-2. Click **"Open from GitHub"**.
-3. Enter the repository URL: `https://github.com/openptv/flowtracks_examples`
-4. Select `index.py` (or any notebook in `notebooks/`) to open and run instantly in WASM / Sandbox mode!
+A gallery of **[marimo](https://marimo.io)** interactive notebooks and workflows for **[flowtracks](https://github.com/openptv/postptv)** (PostPTV) — 3D Particle Tracking Velocimetry (3D-PTV) post-processing, kinematic analysis, interactive Plotly visualization, and cloud-native **Zarr** data containers.
 
 ---
 
-## 💻 Running Marimo as a Local Gallery
+## 🚀 Quick Start
 
-To run the interactive **Marimo Gallery & Library Index** locally:
+### ⚡ Online Cloud Run (Zero Setup via molab)
 
-### 1. Read-Only App / Gallery Mode
-Run the gallery as an interactive web app:
-```bash
-uv run marimo run index.py
-# or zero-install with uvx:
-uvx marimo run index.py
-```
+Run the interactive gallery and notebooks directly in your browser without installing anything locally via **[molab.marimo.io](https://molab.marimo.io)**:
 
-### 2. Interactive Edit Mode
-Edit and launch notebooks directly:
-```bash
-uv run marimo edit index.py
-# or
-uv run marimo edit gallery.py
-```
+1. Launch **[molab.marimo.io](https://molab.marimo.io)**
+2. Click **"Open from GitHub"**
+3. Enter repository: `https://github.com/openptv/flowtracks_examples`
+4. Select `index.py` (or any notebook in `notebooks/`) to run instantly in WASM/Sandbox mode!
 
-The gallery index provides a searchable card interface with category filters (`Data Loading & Zarr`, `Visualization`, `Analysis & Scene Studies`), tag filtering, and instant notebook launch buttons.
+---
 
-### 3. Running Individual Notebooks Directly
-```bash
-# Run a single notebook as a web app
-uv run marimo run notebooks/marimo_aorta_flowtracks.py
+### 💻 Local Setup (using `uv`)
 
-# Open a single notebook in interactive editor
-uv run marimo edit notebooks/marimo_aorta_flowtracks.py
-```
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/openptv/flowtracks_examples.git
+   cd flowtracks_examples
+   ```
 
+2. **Sync environment**:
+   ```bash
+   uv sync
+   ```
 
-## Test Data
+3. **Launch the Marimo Gallery & Library Index**:
+   ```bash
+   # Launch as an interactive web application
+   uv run marimo run index.py
 
-Test data is available in the `test_zarr` folder (pre-built Zarr trajectory stores),
-the `test_data` folder (`ptv_is`, `xuap`, `xuag`, and `trajPoint` text files for frames
-101000–101025), and the `test_h5` folder (pre-built HDF5 Scene files). Some examples
-also use files in `test_mat/`.
+   # Or open in interactive editor mode
+   uv run marimo edit index.py
+   ```
 
-`flowtracks` now natively supports reading and writing cloud-native **Zarr stores**
-via `flowtracks.io.read_zarr_trajectories()` and `flowtracks.io.save_zarr_trajectories()`,
-as well as auto-detecting `.zarr` paths in `flowtracks.io.trajectories()`.
+*(If developing alongside `postptv`, `pyproject.toml` is pre-configured with `[tool.uv.sources]` pointing to `../postptv`)*
 
+---
 
-## Flowtracks Example Notebooks Catalog
+## 📂 Notebook Catalog
 
-Welcome to the Flowtracks example notebooks! All Jupyter notebook examples and scripts have been converted to reactive **marimo** notebooks.
+The library includes 19 interactive marimo notebooks categorized by stage:
 
-### Data Loading & Zarr
-- **[flowtracks_load_data_to_hdf_and_plot3d.py](notebooks/flowtracks_load_data_to_hdf_and_plot3d.py)**: Load data into Zarr/HDF format and create 3D trajectory plots.
+### 📦 Data Loading & Zarr
+- **[flowtracks_load_data_to_hdf_and_plot3d.py](notebooks/flowtracks_load_data_to_hdf_and_plot3d.py)**: Load data from text, HDF, or Zarr sources and export to cloud-native `.zarr` stores.
 - **[marimo_aorta_flowtracks.py](notebooks/marimo_aorta_flowtracks.py)**: End-to-end 3D cardiac aortic flow processing driving smoothing and Eulerian binning from `run.zarr`.
 - **[plotting_trajectories_using_postptv.py](notebooks/plotting_trajectories_using_postptv.py)**: Auto-detect Zarr stores, HDF5, or `ptv_is` text files.
 - **[plotting_2d_trajectories_using_openptv_postptv.py](notebooks/plotting_2d_trajectories_using_openptv_postptv.py)**: 2D XY projection of trajectories.
@@ -97,15 +62,15 @@ Welcome to the Flowtracks example notebooks! All Jupyter notebook examples and s
 - **[read_alex_ruiz_data.py](notebooks/read_alex_ruiz_data.py)**: Read v7.3 MAT files using `hdf5storage` and export Trajectory lists to Zarr.
 - **[read_alex_ruiz_data-h5py.py](notebooks/read_alex_ruiz_data-h5py.py)**: Read MATLAB datasets directly with `h5py` and convert to PyTables HDF5 & Zarr stores.
 
-### Visualization (2D / 3D / Plotly)
+### 🎨 Visualization (Plotly & Interactive 3D)
 - **[marimo_zarr_dashboard.py](notebooks/marimo_zarr_dashboard.py)**: Interactive Zarr data dashboard inspecting chunked trajectory stores and velocity fields.
 - **[plotly_visualize_trajectories_nb.py](notebooks/plotly_visualize_trajectories_nb.py)**: Interactive 3D Plotly trajectory visualizer with time window sliders and speed colormaps.
 - **[plotly_3d_trajectories.py](notebooks/plotly_3d_trajectories.py)**: 3D line plot of particle trajectories grouped by ID using Plotly Express.
-- **[myptv_visualization.py](notebooks/myptv_visualization.py)**: Render 3D trajectories with speed-dependent viridis colormapping.
-- **[plot_frames.py](notebooks/plot_frames.py)**: Plot multi-panel 2D (x-y, y-z) and 3D frame snapshots.
+- **[myptv_visualization.py](notebooks/myptv_visualization.py)**: Render 3D trajectories with speed-dependent Viridis colormapping in Plotly.
+- **[plot_frames.py](notebooks/plot_frames.py)**: Plot multi-panel 2D (x-y, y-z) and 3D frame snapshots using Plotly subplots.
 - **[animate_trajectories.py](notebooks/animate_trajectories.py)**: Generate high-resolution MP4 video animations of particle tails with camera controls.
 
-### Analysis & Scene Studies
+### 🔬 Analysis & Scene Studies
 - **[pair_analysis_example.py](notebooks/pair_analysis_example.py)**: Pairwise particle trajectory analysis with velocity magnitude 3D scatter plots.
 - **[joint_pdf.py](notebooks/joint_pdf.py)**: Compute joint probability density functions (PDF) of velocity vs acceleration.
 - **[test_plot_pdf_subplots.py](notebooks/test_plot_pdf_subplots.py)**: Fit Gaussian distributions to particle velocity components and plot subplots.
@@ -113,16 +78,28 @@ Welcome to the Flowtracks example notebooks! All Jupyter notebook examples and s
 - **[linking_trajectories.py](notebooks/linking_trajectories.py)**: Bridge broken trajectory gaps using predictive kinematic velocity matching.
 - **[repeated_interpolation.py](notebooks/repeated_interpolation.py)**: Evaluate local velocity interpolation consistency via random subsampling.
 
+---
+
+## 📁 Data Formats
+
+The examples utilize sample data provided in the repository:
+- **`test_zarr/`**: Pre-built cloud-native Zarr stores (`trajectories.zarr`).
+- **`test_h5/`**: PyTables HDF5 trajectory files (`traj_GT.h5`, `traj_RC.h5`, `test.h5`).
+- **`test_data/`**: OpenPTV legacy text output files (`ptv_is.%d`, `xuap.%d`, `trajPoint.%d`).
+- **`test_mat/`**: MATLAB v7.3 datasets (`traj_GT.mat`, `traj_RC.mat`).
 
 ---
 
-## Why Flowtracks?
-Flowtracks provides a robust, extensible platform for working with particle tracking data. These notebooks showcase how you can:
-- Load data from a variety of sources
-- Visualize trajectories in 2D and 3D
-- Perform advanced statistical and pairwise analyses
+## 🧪 Testing
 
-Explore the notebooks above to see Flowtracks in action and accelerate your research or application development!
+To run the automated smoke test suite across all data readers, Zarr round-trips, and notebook definitions:
 
-![](3dtraj.png)
+```bash
+uv run pytest
+```
 
+---
+
+## 🖼️ Preview
+
+![3D Trajectories Preview](3dtraj.png)
