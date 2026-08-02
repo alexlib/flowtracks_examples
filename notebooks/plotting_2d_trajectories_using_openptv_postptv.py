@@ -22,7 +22,7 @@ def _(mo):
     mo.md(r"""
     In this notebook we go through the process of reading trajectories and displaying their XY projection, as an example of how to manipulate trajectory objects. Naturally, trajectories contain 3D data, but here we only use a 2D view for simplicity.
 
-    The first step is to import the necessary modules. We use Matplotlib's pyplot for simple plotting commands, and ``flowtracks.io`` is the module supplied by the PostPTV project for reading trajectories in various formats. In it, ``trajectories_ptvis()`` handles two similar formats: ``ptv_is`` is the standard  output of OpenPTV; it is a series of files with a name like ``ptv_is.10001`` where the number denotes the frame number. Each line in the file describes one particle. ``xuap`` is a similar format for trajectories, with different indexing and additional data stored for each particle.
+    The first step is to import the necessary modules. We use Matplotlib's pyplot for simple plotting commands, and ``flowtracks.io`` is the module supplied by the PostPTV project for reading trajectories in various formats (Zarr stores, HDF5, and ptv_is text files).
     """)
     return
 
@@ -30,29 +30,36 @@ def _(mo):
 @app.cell
 def _():
     from matplotlib import pyplot
-    from flowtracks.io import trajectories_ptvis
+    from flowtracks.io import trajectories, read_zarr_trajectories
 
-    return pyplot, trajectories_ptvis
+    return pyplot, read_zarr_trajectories, trajectories
 
 
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
-    In the next step we point the reading function to the location of our files using a format string. The %d marks for the reading code the position of the frame number in the file names.  The use of the ``xuap`` format here must be explicitly stated.
+    In the next step we point the reading function `trajectories()` to the location of our files (either a `.zarr` directory or a `ptv_is.%d` template).
 
-    Note that we request only trajectories at least 5 frames long to be read. For large data sets, this saves a lot of memory in the reading process.
+    Note that we request only trajectories at least 3 frames long to be read.
     """)
     return
 
 
 @app.cell
-def _(trajectories_ptvis):
+def _(trajectories):
     from pathlib import Path
     base_dir = Path(__file__).parent if '__file__' in globals() else Path.cwd()
+    zarr_dir = base_dir / 'test_zarr' / 'trajectories.zarr' if (base_dir / 'test_zarr').exists() else base_dir / '..' / 'test_zarr' / 'trajectories.zarr'
     data_dir = base_dir if (base_dir / 'test_data').exists() else base_dir / '..' / 'test_data'
-    inName = str(data_dir / 'ptv_is.%d')
-    trajects = trajectories_ptvis(inName, traj_min_len=3)
+
+    if zarr_dir.exists():
+        inName = str(zarr_dir)
+        trajects = trajectories(inName, traj_min_len=3)
+    else:
+        inName = str(data_dir / 'ptv_is.%d')
+        trajects = trajectories(inName, traj_min_len=3)
     return inName, trajects
+
 
 
 @app.cell(hide_code=True)

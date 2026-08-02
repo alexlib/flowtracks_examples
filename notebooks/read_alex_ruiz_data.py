@@ -128,5 +128,17 @@ def _(plt, trajects_RC):
     return
 
 
+@app.cell
+def _(trajects_GT, trajects_RC):
+    from flowtracks.io import save_zarr_trajectories
+    from pathlib import Path as _Path
+    _base_dir = _Path(__file__).parent if '__file__' in globals() else _Path.cwd()
+    _zarr_dir = _base_dir if (_base_dir / 'test_zarr').exists() else _base_dir / '..' / 'test_zarr'
+    save_zarr_trajectories(trajects_GT, str(_zarr_dir / 'traj_GT.zarr'))
+    save_zarr_trajectories(trajects_RC, str(_zarr_dir / 'traj_RC.zarr'))
+    return
+
+
 if __name__ == "__main__":
     app.run()
+

@@ -18,13 +18,20 @@ def _():
 
 @app.cell
 def _():
-    from flowtracks.io import trajectories_ptvis
+    from flowtracks.io import trajectories, read_zarr_trajectories
     from pathlib import Path
     base_dir = Path(__file__).parent if '__file__' in globals() else Path.cwd()
+    zarr_path = base_dir / 'test_zarr' / 'trajectories.zarr' if (base_dir / 'test_zarr').exists() else base_dir / '..' / 'test_zarr' / 'trajectories.zarr'
     data_dir = base_dir if (base_dir / 'test_data').exists() else base_dir / '..' / 'test_data'
-    inName = str(data_dir / 'ptv_is.%d')
-    trajects = trajectories_ptvis(inName, traj_min_len=15)
+
+    if zarr_path.exists():
+        inName = str(zarr_path)
+    else:
+        inName = str(data_dir / 'ptv_is.%d')
+
+    trajects = trajectories(inName, traj_min_len=5)
     return (trajects,)
+
 
 
 @app.cell

@@ -27,6 +27,11 @@ def _h5_files_exist():
     return (TEST_H5 / "traj_GT.h5").exists()
 
 
+def _zarr_files_exist():
+    return (REPO / "test_zarr" / "trajectories.zarr").exists()
+
+
+
 # ── Text-ingest tests ───────────────────────────────────────────────────────
 
 
@@ -204,3 +209,86 @@ class TestInterpolation:
         result = rbf(tracer_pos, interp_points, data)
         assert result.shape == (m, d)
         assert np.all(np.isfinite(result))
+
+
+# ── Zarr ingest & round-trip tests ─────────────────────────────────────────
+
+
+@pytest.mark.skipif(not _zarr_files_exist(), reason="test_zarr/ not found")
+class TestZarrIngest:
+    def test_read_zarr_trajectories(self):
+        from flowtracks.io import read_zarr_trajectories
+
+        zarr_path = REPO / "test_zarr" / "trajectories.zarr"
+        trjs = read_zarr_trajectories(zarr_path)
+        assert len(trjs) > 0, "expected at least one trajectory in Zarr store"
+
+    def test_trajectories_auto_detect_zarr(self):
+        from flowtracks.io import trajectories
+
+        zarr_path = str(REPO / "test_zarr" / "trajectories.zarr")
+        trjs = trajectories(zarr_path)
+        assert len(trjs) > 0
+
+    def test_zarr_pos_vel_shapes(self):
+        from flowtracks.io import read_zarr_trajectories
+
+        zarr_path = REPO / "test_zarr" / "trajectories.zarr"
+        trjs = read_zarr_trajectories(zarr_path)
+        for tr in trjs[:10]:
+            p = tr.pos()
+            assert p.ndim == 2 and p.shape[1] == 3
+
+
+@pytest.mark.skipif(not _ptv_is_files_exist(), reason="test_data/ not found")
+class TestZarrRoundTrip:
+    def test_save_and_reload_zarr(self, tmp_path):
+        from flowtracks.io import (
+            trajectories_ptvis,
+            save_zarr_trajectories,
+            read_zarr_trajectories,
+            trajectories,
+        )
+
+        template = str(TEST_DATA / "ptv_is.%d")
+        original = trajectories_ptvis(template, traj_min_len=3)
+        temp_zarr = tmp_path / "sample.zarr"
+        save_zarr_trajectories(original, temp_zarr)
+
+        reloaded = read_zarr_trajectories(temp_zarr)
+        assert len(reloaded) == len(original)
+
+        reloaded_auto = trajectories(str(temp_zarr))
+        assert len(reloaded_auto) == len(original)
+
+        by_id = {tr.trajid(): tr for tr in original}
+        for r in reloaded:
+            o = by_id.get(r.trajid())
+            assert o is not None
+            np.testing.assert_array_almost_equal(o.pos(), r.pos())
+
+
+# ── Marimo notebook smoke tests ─────────────────────────────────────────────
+
+
+class TestMarimoNotebooksImports:
+    def test_all_notebooks_syntax_and_app(self):
+        import ast
+
+        nb_dir = REPO / "notebooks"
+        nb_files = list(nb_dir.glob("*.py"))
+        assert len(nb_files) == 19, f"expected 19 notebook files, found {len(nb_files)}"
+
+
+        for nb_path in nb_files:
+            code = nb_path.read_text(encoding="utf-8")
+            tree = ast.parse(code, filename=str(nb_path))
+            has_app = any(
+                isinstance(node, ast.Assign)
+                and any(isinstance(target, ast.Name) and target.id == "app" for target in node.targets)
+                for node in tree.body
+            )
+            assert has_app, f"{nb_path.name} missing 'app = marimo.App(...)' definition"
+
+
+

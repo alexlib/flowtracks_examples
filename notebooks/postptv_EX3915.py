@@ -14,31 +14,29 @@ app = marimo.App()
 def _():
     import numpy as np
     import matplotlib.pyplot as plt
-    from flowtracks.io import iter_trajectories_ptvis
-    # '%matplotlib inline' command supported automatically in marimo
-    return iter_trajectories_ptvis, np, plt
+    from flowtracks.io import trajectories, read_zarr_trajectories
+    return read_zarr_trajectories, trajectories, np, plt
 
 
 @app.cell
 def _():
-    # see openptv forum for Christophe Henry messages
     from pathlib import Path
     base_dir = Path(__file__).parent if '__file__' in globals() else Path.cwd()
+    zarr_path = base_dir / 'test_zarr' / 'trajectories.zarr' if (base_dir / 'test_zarr').exists() else base_dir / '..' / 'test_zarr' / 'trajectories.zarr'
     data_dir = base_dir if (base_dir / 'test_data').exists() else base_dir / '..' / 'test_data'
-    inName = str(data_dir / 'ptv_is.%d')
-    # or use the test data
-    # inName = "./test_data/ptv_is.%d" # the directory with the input files
+    if zarr_path.exists():
+        inName = str(zarr_path)
+    else:
+        inName = str(data_dir / 'ptv_is.%d')
     return (inName,)
 
 
 @app.cell
-def _(inName, iter_trajectories_ptvis):
-    #----parameters
-    traj_min_len = 10 # in this particular example we have short trajectories
-
-    #----cal traj.
-    trajects = list(iter_trajectories_ptvis(inName, first=101000, last=101025, traj_min_len=traj_min_len))
+def _(inName, trajectories):
+    traj_min_len = 10
+    trajects = list(trajectories(inName, first=101000, last=101025, traj_min_len=traj_min_len))
     return (trajects,)
+
 
 
 @app.cell
