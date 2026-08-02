@@ -29,10 +29,31 @@ uv lock
 uv sync
 ```
 
-## Running the Examples & Gallery Index
+## 🚀 Online Instant Run (Zero Setup via molab)
 
-To open the interactive **Marimo Gallery & Library Index** (`index.py`):
+You can run the interactive gallery and individual notebooks directly in your browser without installing anything locally via **[molab.marimo.io](https://molab.marimo.io)**:
 
+1. Launch **[molab.marimo.io](https://molab.marimo.io)**.
+2. Click **"Open from GitHub"**.
+3. Enter the repository URL: `https://github.com/openptv/flowtracks_examples`
+4. Select `index.py` (or any notebook in `notebooks/`) to open and run instantly in WASM / Sandbox mode!
+
+---
+
+## 💻 Running Marimo as a Local Gallery
+
+To run the interactive **Marimo Gallery & Library Index** locally:
+
+### 1. Read-Only App / Gallery Mode
+Run the gallery as an interactive web app:
+```bash
+uv run marimo run index.py
+# or zero-install with uvx:
+uvx marimo run index.py
+```
+
+### 2. Interactive Edit Mode
+Edit and launch notebooks directly:
 ```bash
 uv run marimo edit index.py
 # or
@@ -41,12 +62,15 @@ uv run marimo edit gallery.py
 
 The gallery index provides a searchable card interface with category filters (`Data Loading & Zarr`, `Visualization`, `Analysis & Scene Studies`), tag filtering, and instant notebook launch buttons.
 
-Individual notebooks can also be opened directly:
-
+### 3. Running Individual Notebooks Directly
 ```bash
-# Open a single notebook
+# Run a single notebook as a web app
+uv run marimo run notebooks/marimo_aorta_flowtracks.py
+
+# Open a single notebook in interactive editor
 uv run marimo edit notebooks/marimo_aorta_flowtracks.py
 ```
+
 
 ## Test Data
 
